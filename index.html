@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #FFDEE9, #B5FFFC);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .form-container, .quiz-container, .personal-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        button {
+            background-color: #6200EA;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #3700B3;
+        }
+
+        h1, h2 {
+            color: #6200EA;
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 10px;
+            width: 90%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #quiz button {
+            margin: 5px;
+            padding: 10px;
+        }
+
+        .correct {
+            background-color: green !important;
+        }
+
+        .wrong {
+            background-color: red !important;
+        }
+
+        .personal-info img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-top: 20px;
+        }
+
+        .personal-info h2, .personal-info p {
+            color: #333;
+        }
+    </style>
+</head>
+<body> 
+    <!-- Form Section -->
+    <div class="form-container" id="form-container">
+        <h1>LOGINE TO BASIC DETAIL</h1>
+        <form id="loginForm">
+            <label for="college">College Name:</label>
+            <input type="text" id="college" required placeholder="fill our collage name acoe or (aditya University)"><br>
+            <label for="year">Pass Year:</label>
+            <input type="text" id="year" required placeholder="like as 2027"><br>
+            <label for="roll">Roll Number:</label>
+            <input type="text" id="roll" required placeholder=" give like 23mh1a0559 "><br>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <!-- Quiz Section -->
+    <div class="quiz-container hidden" id="quiz-container">
+        <h1>Select Language</h1>
+        <div class="language-select">
+            <button onclick="startQuiz('C')">C</button>
+            <button onclick="startQuiz('Python')">Python</button>
+            <button onclick="startQuiz('Java')">Java</button>
+            <button onclick="startQuiz('DSA')">DSA</button>
+        </div>
+        <div id="quiz"></div>
+    </div>
+
+    <!-- Personal Info Section -->
+    <div class="personal-inf" id="personal-info">
+        <!-- <img src="" alt="Sheikh Basir"> -->
+        <h2>SHEIKH BASIR</h2>
+        <p>Country: Nepal</p>
+        <p>University: Aditya University, Surampalem, India</p>
+        <p>belongs: CSE Second Year 3rd semester</p>
+    </div>
+
+    <script>
+        // Sample questions for each language
+        const questions = {
+            'C': [
+                { question: "What is the output of printf('%d', 10);",options: ["10", "20", "30", "40"], answer: "10", answer: "10" },
+                { question: "What is the return type of malloc function?", answer: "void*" },
+                { question: "What does 'sizeof' operator do?", answer: "Returns size of variable" },
+                { question: "What is the main function return type in C?", answer: "int" },
+                { question: "What is a pointer?", answer: "A variable that stores the address of another variable" },
+                { question: "What is an array?", answer: "A collection of similar data types" },
+                { question: "How to declare a variable in C?", answer: "data_type variable_name;" },
+                { question: "What is the purpose of a function in C?", answer: "To perform a specific task" },
+                { question: "What is the use of the 'break' statement?", options: ["To exit a loop", "To terminate the program", "To pause execution", "None of the above"], answer: "To exit a loop" },
+                { question: "What is recursion?", answer: "A function calling itself" },
+                { question: "What is a structure in C?", answer: "A user-defined data type" },
+                { question: "What is a header file?", answer: "A file containing C declarations and macro definitions" },
+                { question: "What is dynamic memory allocation?", answer: "Allocating memory at runtime" },
+                { question: "What is a typedef?", answer: "A keyword to create a new data type" },
+                { question: "What is a null pointer?", answer: "A pointer that doesn't point to any valid memory location" },
+                { question: "What is the use of 'const' keyword?", answer: "To define constant variables" },
+                { question: "What is an enum?", answer: "A user-defined type consisting of a set of named integer constants" },
+                { question: "What is a union?", answer: "A data structure that can store different data types in the same memory location" },
+                { question: "What is the use of 'volatile' keyword?", answer: "To tell the compiler that a variable may change at any time" },
+                { question: "What are command line arguments?", answer: "Arguments passed to the program at runtime" },
+                { question: "What is a file pointer?", answer: "A pointer that points to a file" }
+            ],
+            'Python': [
+                { question: "What does 'len()' function do?", answer: "Returns the length" },
+                { question: "What is a list comprehension?", answer: "A concise way to create lists" },
+                { question: "What is the output of print(2**3)?", answer: "8" },
+                { question: "What keyword is used to define a function?", answer: "def" },
+                { question: "How do you insert comments in Python?", answer: "Using # symbol" },
+                { question: "What is the use of 'self' in class methods?", answer: "To refer to the instance of the class" },
+                { question: "What is a tuple?", answer: "An immutable sequence of values" },
+                { question: "How do you create a dictionary?", answer: "Using curly braces with key-value pairs" },
+                { question: "What is a module?", answer: "A file containing Python code" },
+                { question: "What is an exception?", answer: "An error that occurs during execution" },
+                { question: "How to read a file in Python?", answer: "Using open() function" },
+                { question: "What does 'import' keyword do?", answer: "Imports a module" },
+                { question: "What is a lambda function?", answer: "An anonymous function" },
+                { question: "What is a set?", answer: "An unordered collection of unique elements" },
+                { question: "How do you declare a variable?", answer: "Simply assign a value to a name" },
+                { question: "What is the output of 'bool(0)'?", answer: "False" },
+                { question: "What is 'None' in Python?", answer: "A special constant representing the absence of a value" },
+                { question: "What is a generator?", answer: "A function that returns an iterator" },
+                { question: "How do you handle exceptions?", answer: "Using try-except block" },
+                { question: "What is a class?", answer: "A blueprint for creating objects" },
+                { question: "What is a method?", answer: "A function defined inside a class" }
+            ],
+            'Java': [
+                { question: "What is JVM?", answer: "Java Virtual Machine" },
+                { question: "What is inheritance?", answer: "Acquiring properties from parent class" },
+                { question: "What is the main method signature in Java?", answer: "public static void main(String[] args)" },
+                { question: "What is an interface?", answer: "A reference type that can contain only constants, method signatures" },
+                { question: "What is a constructor?", answer: "A special method that is called when an object is instantiated" },
+                { question: "What is encapsulation?", answer: "The bundling of data with the methods that operate on that data" },
+                { question: "What is polymorphism?", answer: "The ability of a variable, function, or object to take on multiple forms" },
+                { question: "What is abstraction?", answer: "Hiding complex implementation details and showing only the essential features" },
+                { question: "What is the purpose of 'final' keyword?", answer: "To declare constants or prevent method overriding" },
+                { question: "What is a package?", answer: "A namespace for organizing classes and interfaces" },
+                { question: "What is a thread?", answer: "A lightweight process that can run concurrently" },
+                { question: "What is garbage collection?", answer: "Automatic memory management" },
+                { question: "What is a static variable?", answer: "A variable that belongs to the class rather than any instance" },
+                { question: "What is a string in Java?", answer: "An object that represents a sequence of characters" },
+                { question: "What is a wrapper class?", answer: "A class that encapsulates a primitive type" },
+                { question: "What is method overloading?", answer: "Defining multiple methods with the same name but different parameters" },
+                { question: "What is method overriding?", answer: "Redefining a method in a subclass" },
+                { question: "What is an exception?", answer: "An event that disrupts the normal flow of a program" },
+                { question: "What is a synchronized block?", answer: "A block of code that can only be accessed by one thread at a time" },
+                { question: "What is an array?", answer: "A container that holds a fixed number of values of a single type" },
+                { question: "What is a collection framework?", answer: "A unified architecture for representing and manipulating collections" }
+            ],
+            'DSA': [
+                { question: "What is a binary tree?", answer: "A tree with at most two children" },
+                { question: "What is a stack?", answer: "LIFO data structure" },
+                { question: "What is a queue?", answer: "FIFO data structure" },
+                { question: "What is a linked list?", answer: "A linear data structure where elements are stored in nodes" },
+                { question: "What is a hash table?", answer: "A data structure that maps keys to values" },
+                { question: "What is recursion?", answer: "A method where the solution to a problem depends on solutions to smaller instances" },
+                { question: "What is a graph?", answer: "A collection of nodes connected by edges" },
+                { question: "What is a binary search?", answer: "A search algorithm that finds the position of a target value" },
+                { question: "What is a sorting algorithm?", answer: "An algorithm that puts elements of a list in a certain order" },
+                { question: "What is the time complexity of linear search?", answer: "O(n)" },
+                { question: "What is the time complexity of binary search?", answer: "O(log n)" },
+                { question: "What is a dynamic programming?", answer: "An optimization method that solves complex problems by breaking them down" },
+                { question: "What is the difference between a stack and a queue?", answer: "Stack is LIFO, Queue is FIFO" },
+                { question: "What is a depth-first search?", answer: "An algorithm for traversing or searching tree or graph data structures" },
+                { question: "What is a breadth-first search?", answer: "An algorithm for traversing or searching tree or graph data structures" },
+                { question: "What is a bubble sort?", answer: "A simple sorting algorithm that compares adjacent elements" },
+                { question: "What is a quicksort?", answer: "An efficient sorting algorithm using divide-and-conquer" },
+                { question: "What is a merge sort?", answer: "A sorting algorithm that uses a divide-and-conquer approach" },
+                { question: "What is a heap?", answer: "A specialized tree-based data structure" },
+                { question: "What is a trie?", answer: "A tree-like data structure that stores a dynamic set of strings" },
+                { question: "What is Dijkstra's algorithm?", answer: "An algorithm for finding the shortest paths between nodes in a graph" }
+            ]
+        };
+
+        // Form handling
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            document.getElementById('form-container').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+        });
+
+        // Start quiz function
+        function startQuiz(language) {
+            const quizDiv = document.getElementById('quiz');
+            quizDiv.innerHTML = `<h2>${language} Quiz</h2>`;
+            questions[language].forEach((q, index) => {
+                quizDiv.innerHTML += `
+                    <div>
+                        <p>${index + 1}. ${q.question}</p>
+                        <input type="text" id="answer-${index}">
+                        <button onclick="checkAnswer('${language}', ${index})">Submit</button>
+                    </div>
+                `;
+            });
+        }
+
+        // Check answer function
+        function checkAnswer(language, index) {
+            const userAnswer = document.getElementById(`answer-${index}`).value;
+            const correctAnswer = questions[language][index].answer;
+            const button = document.querySelector(`#answer-${index} ~ button`);
+            
+            if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                button.classList.add('correct');
+            } else {
+                button.classList.add('wrong');
+            }
+
+            // If it's the last question, show personal info
+            if (index === questions[language].length - 1) {
+                setTimeout(showPersonalInfo, 1000);
+            }
+        }
+
+        // Display personal info after quiz
+        function showPersonalInfo() {
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('personal-info').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
